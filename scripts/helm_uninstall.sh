@@ -2,4 +2,4 @@
 
 set -e
 
-helm3 uninstall 'experiment'
+helm uninstall 'experiment'
