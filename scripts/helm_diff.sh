@@ -2,5 +2,6 @@
 
 set -e
 
-helm dependencies update
-helm upgrade 'experiment' . --install --namespace default
+"${SCRIPTS_DIR}/helm_dep_update.sh"
+
+helm diff upgrade 'experiment' . -f values.yaml --context 3
