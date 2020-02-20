@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: "1.0"
+version: 1.0.0
+name: orchestrator
+description: Orchestrator chart in Helm/Kubernetes
+dependencies:
+  - name: hello
+    version: 1.0.0
+    repository: file://../hello
+    alias: experiment-hello
+    tags:
+      - experiment

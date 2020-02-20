@@ -1,0 +1,59 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+application:
+  name: experiment
+
+container:
+  image:
+    repository: rayeshuang/friendlyhello
+    tag: latest
+  ports:
+    - containerPort: 80
+  resources:
+    requests:
+      memory: 20Mi
+    limits:
+      memory: 30Mi
+  volumeMounts: []
+
+deployment:
+  # REMEMBER: Use quotes for zero replicas
+  replicaCount: 1
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: main
+            operator: Exists
+  strategy:
+    rollingUpdate:
+      maxSurge: "25%"
+      maxUnavailable: "25%"
+    type: RollingUpdate
+
+service:
+  type: ClusterIP
+  ports:
+    - port: 80
+
+ingress:
+  default:
+    enabled: false
+    paths:
+      - path: /
+        port: 80
+    # hosts:
+    #   - experiment.kubernetes.local
+    # Use this to enable TLS
+    # tls:
+    #   - hosts:
+    #       - experiment.kubernetes.local
+    # Use this to enable Let's encrypt
+    certManager:
+      enabled: false
+      issuer: {}
+    basicauth:
+      enabled: false

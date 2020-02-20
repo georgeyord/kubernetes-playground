@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ include "hello.namespace" . }}
+  name: {{ include "hello.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "hello.name" . }}
+    helm.sh/chart: {{ include "hello.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- with .Values.deployment.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "hello.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "hello.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- $applicationName := printf "%s (%s)" .Values.application.name .Release.Name }}
+          {{- with .Values.container }}
+          image: "{{ .image.repository }}:{{ .image.tag }}"
+          imagePullPolicy: {{ .image.pullPolicy | default "IfNotPresent" }}
+          {{- with .args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: NAME
+              value: {{ $applicationName | quote }}
+            {{- if .env }}
+            {{- toYaml .env | nindent 12 }}
+            {{- end }}
+          ports:
+            {{- range .ports }}
+            - name: {{ .name | default "http" }}
+              protocol: {{ .protocol | default "TCP" }}
+              containerPort: {{ .containerPort }}
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 30
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+      restartPolicy: {{ .restartPolicy }}
+      terminationGracePeriodSeconds: {{ .terminationGracePeriodSeconds | default 30 }}
+      {{- end }}
+  {{- with .Values.deployment }}
+    {{- with .imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+  replicas: {{ .replicaCount | default 1 }}
+  revisionHistoryLimit: {{ .revisionHistoryLimit | default 0 }}
+  {{- end }}

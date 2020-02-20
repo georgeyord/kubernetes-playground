@@ -1,0 +1,6 @@
+dependencies:
+- name: hello
+  repository: file://../hello
+  version: 1.0.0
+digest: sha256:7fbc885a92e83cdaf91d64e3678643454ce7ecb70bd9625438e668684d1cc727
+generated: "2020-02-20T12:45:21.898814+02:00"
