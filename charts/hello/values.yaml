@@ -41,12 +41,13 @@ service:
 
 ingress:
   default:
-    enabled: false
+    # Use this to enable Ingress
+    enabled: true
     paths:
       - path: /
         port: 80
-    # hosts:
-    #   - experiment.kubernetes.local
+    hosts:
+      - experiment.kubernetes.local
     # Use this to enable TLS
     # tls:
     #   - hosts:
