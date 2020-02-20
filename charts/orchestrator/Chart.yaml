@@ -4,9 +4,15 @@ version: 1.0.0
 name: orchestrator
 description: Orchestrator chart in Helm/Kubernetes
 dependencies:
-  - name: hello
-    version: 1.0.0
-    repository: file://../hello
-    alias: experiment-hello
-    tags:
-      - experiment
+- name: hello
+  version: 1.0.0
+  repository: file://../hello
+  alias: experiment-hello
+  tags:
+    - experiment
+- name: nginx-ingress
+  # https://github.com/helm/charts/blob/master/stable/nginx-ingress/Chart.yaml
+  version: 1.31.x
+  repository: "@stable"
+  tags:
+    - nginx-ingress
