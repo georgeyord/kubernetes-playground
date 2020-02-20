@@ -2,10 +2,9 @@
 
 set -e
 
-SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]}")
 
-helm3 dependencies update
+"${SCRIPTS_DIR}/helm_dep_update.sh"
 
 helm3 lint
-
 helm3 upgrade 'experiment' . --install --namespace default
