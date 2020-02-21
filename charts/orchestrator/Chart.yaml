@@ -16,3 +16,15 @@ dependencies:
   repository: "@stable"
   tags:
     - nginx-ingress
+- name: cert-manager-customizations
+  version: 1.0.0
+  repository: file://../cert-manager-customizations
+  tags:
+    - cert-manager
+- name: cert-manager
+  version: 0.13.1
+  repository: "@jetstack"
+  tags:
+    - cert-manager
+  
+  
