@@ -1,10 +1,4 @@
 tags:
-  experiment: true
-  nginx-ingress: true
-
-####################
-# Experiment hello #
-####################
-
-experiment-hello:
-  fullnameOverride: experiment-hello
+  experiment: false
+  nginx-ingress: false
+  cert-manager: false

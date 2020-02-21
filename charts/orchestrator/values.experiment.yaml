@@ -1,0 +1,10 @@
+tags:
+  experiment: true
+  nginx-ingress: true
+
+####################
+# Experiment hello #
+####################
+
+experiment-hello:
+  fullnameOverride: experiment-hello

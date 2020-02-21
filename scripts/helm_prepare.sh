@@ -2,10 +2,10 @@
 
 set -e
 
-export HELM_DEP_IGNORE="${HELM_DEP_IGNORE:-0}"
-if [[ "$1" == "-f" ]]; then HELM_DEP_IGNORE=1; shift; fi
+export HELM_NO_PREPARE="${HELM_NO_PREPARE:-0}"
+if [[ "$1" == "-f" ]]; then HELM_NO_PREPARE=1; shift; fi
 
-if [[ "${HELM_DEP_IGNORE}" == "1" ]]; then
+if [[ "${HELM_NO_PREPARE}" == "1" ]]; then
   echo >&2 "Bypass updating helm charts..." && sleep 0.2
 else
   echo >&2 -e "\n########## Deploy prerequisites ########## \n"

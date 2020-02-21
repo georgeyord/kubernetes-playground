@@ -4,9 +4,27 @@ set -e
 
 SCRIPTS_DIR=$(dirname "${BASH_SOURCE[0]}")
 
-export HELM_DEP_IGNORE="${HELM_DEP_IGNORE:-0}"
-if [[ "$1" == "-f" ]]; then HELM_DEP_IGNORE=1; shift; fi
+export HELM_NO_PREPARE="${HELM_NO_PREPARE:-0}"
+if [[ "$1" == "-f" ]]; then HELM_NO_PREPARE=1; shift; fi
 
 "${SCRIPTS_DIR}/helm_prepare.sh"
 
-helm diff upgrade 'experiment' . -f values.yaml --context 3
+echo >&2 -e "\n########## Release diff - experiment ########## \n"
+
+helm diff upgrade \
+  'experiment' . \
+  -f values.yaml \
+  -f values.experiment.yaml \
+  -f values.custom.yaml \
+  --allow-unreleased \
+  --context 3
+
+echo >&2 -e "\n########## Release diff - cert-manager ########## \n"
+
+helm diff upgrade \
+  'cert-manager' . \
+  -f values.yaml \
+  -f values.cert-manager.yaml \
+  -f values.custom.yaml \
+  --allow-unreleased \
+  --context 3
