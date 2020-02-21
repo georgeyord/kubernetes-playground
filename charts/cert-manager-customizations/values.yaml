@@ -2,6 +2,11 @@ nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
 
+global:
+  default: {}
+    # The owner of the let's encrypt certificates
+    # email: CHANGEME@example.com
+
 clusterIssuers:
   - name: letsencrypt-staging
     production: false

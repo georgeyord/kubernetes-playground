@@ -9,6 +9,7 @@ if [[ "${HELM_NO_PREPARE}" == "1" ]]; then
   echo >&2 "Bypass updating helm charts..." && sleep 0.2
 else
   echo >&2 -e "\n########## Deploy prerequisites ########## \n"
+  kubectl create namespace "default" || echo >&2 -e "OK"
   kubectl create namespace "cert-manager" || echo >&2 -e "OK"
 
   echo >&2 -e "\n\n########## Helm dependencies update ########## \n"

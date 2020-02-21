@@ -9,6 +9,8 @@ tags:
 
 global:
   default:
+    # The owner of the let's encrypt certificates
+    email: CHANGEME@example.com
     ingress:
       issuer:
         name: cm-cluster-issuer-letsencrypt-staging
