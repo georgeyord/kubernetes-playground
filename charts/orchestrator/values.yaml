@@ -2,3 +2,15 @@ tags:
   experiment: false
   nginx-ingress: false
   cert-manager: false
+
+####################
+# Global variables #
+####################
+
+global:
+  default:
+    ingress:
+      issuer:
+        name: cm-cluster-issuer-letsencrypt-staging
+        type: cluster-issuer
+

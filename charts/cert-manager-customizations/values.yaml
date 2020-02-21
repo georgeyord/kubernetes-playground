@@ -1,3 +1,11 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: ""
+
+clusterIssuers:
+  - name: letsencrypt-staging
+    production: false
+    http01: true
+  - name: letsencrypt-production
+    production: true
+    http01: true

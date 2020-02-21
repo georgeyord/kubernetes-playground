@@ -1,0 +1,41 @@
+{{- $globalEmail := .Values.global.default.email -}}
+{{- $fullname := include "cert-manager-customizations.fullname" . -}}
+{{- $name := include "cert-manager-customizations.name" . -}}
+{{- $chart := include "cert-manager-customizations.chart" . -}}
+{{- $releaseName := .Release.Name -}}
+{{- $releaseService := .Release.Service -}}
+{{- range .Values.clusterIssuers }}
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: cm-cluster-issuer-{{ .name }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chart }}
+    app.kubernetes.io/instance: {{ $releaseName }}
+    app.kubernetes.io/managed-by: {{ $releaseService }}
+spec:
+  acme:
+    # The ACME server URL
+    {{ if .production -}}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    {{- else -}}
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    {{- end }}
+    # Email address used for ACME registration
+    email: {{ default .email $globalEmail }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: cm-clusterissuer-{{ .name }}-key
+    {{ if .http01 -}}
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+      # selector:
+      #   matchLabels:
+      #     solverHttp01: "true"
+    {{- end }}
+---
+{{ end -}}
