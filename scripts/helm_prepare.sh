@@ -9,7 +9,7 @@ if [[ "${HELM_DEP_IGNORE}" == "1" ]]; then
   echo >&2 "Bypass updating helm charts..." && sleep 0.2
 else
   echo >&2 -e "\n########## Deploy prerequisites ########## \n"
-  kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.13/deploy/manifests/00-crds.yaml --validate=false >&2
+  kubectl create namespace "cert-manager" || echo >&2 -e "OK"
 
   echo >&2 -e "\n\n########## Helm dependencies update ########## \n"
   helm repo add stable https://kubernetes-charts.storage.googleapis.com
