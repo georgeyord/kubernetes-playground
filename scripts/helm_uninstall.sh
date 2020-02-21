@@ -2,4 +2,5 @@
 
 set -e
 
-helm uninstall 'experiment'
+helm uninstall 'experiment' -n default
+helm uninstall 'cert-manager' -n cert-manager
