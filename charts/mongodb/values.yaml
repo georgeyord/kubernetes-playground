@@ -1,0 +1,37 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+container:
+  image:
+    repository: mongo
+    tag: 4.0
+  ports:
+    - name: mongo
+      containerPort: 27017
+  resources:
+    requests:
+      memory: 550Mi
+    limits:
+      memory: 2400Mi
+  # To use a persistent volume
+  # volumeMounts:
+  #   - name: data
+  #     mountPath: /data/db
+
+deployment:
+  # To use a persistent volume
+  # volumeClaimTemplates:
+  #   - name: data
+  #     accessModes: [ ReadWriteOnce ]
+  #     storage: 10Gi
+      # storageClassName: "gp2"
+
+service:
+  type: ClusterIP
+  ports:
+    - name: mongo
+      port: 27017
+
+ingress:
+  enabled: false

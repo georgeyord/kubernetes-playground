@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ include "mongo-express.namespace" . }}
+  name: {{ include "mongo-express.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "mongo-express.name" . }}
+    helm.sh/chart: {{ include "mongo-express.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  ports:
+    {{- range .Values.service.ports }}
+    - name: {{ .name | default "http" }}
+      protocol: {{ .protocol | default "TCP" }}
+      port: {{ .port }}
+      {{ with .targetPort -}}targetPort: {{ . }}{{- end -}}
+      {{ with .nodePort -}}nodePort: {{ . }}{{- end -}}
+    {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "mongo-express.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  sessionAffinity: None

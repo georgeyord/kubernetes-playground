@@ -1,15 +1,21 @@
 dependencies:
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v0.13.1
+- name: cert-manager-customizations
+  repository: file://../cert-manager-customizations
+  version: 1.0.0
 - name: hello
   repository: file://../hello
+  version: 1.0.0
+- name: mongodb
+  repository: file://../mongodb
+  version: 1.0.0
+- name: mongo-express
+  repository: file://../mongo-express
   version: 1.0.0
 - name: nginx-ingress
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.31.0
-- name: cert-manager-customizations
-  repository: file://../cert-manager-customizations
-  version: 1.0.0
-- name: cert-manager
-  repository: https://charts.jetstack.io
-  version: v0.13.1
-digest: sha256:863ff9c2081bdb68f03564252b5755847a5065478701b2df85232c6b2504cdea
-generated: "2020-02-21T13:18:00.643906739+02:00"
+digest: sha256:f1525c2c8c7f504088ef433f71315da7b6abe16059602b0c569bb518bb116153
+generated: "2020-02-24T16:29:47.281051+02:00"

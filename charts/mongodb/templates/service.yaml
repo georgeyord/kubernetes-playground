@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ include "mongodb.namespace" . }}
+  name: {{ include "mongodb.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "mongodb.name" . }}
+    helm.sh/chart: {{ include "mongodb.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  ports:
+    {{- range .Values.service.ports }}
+    - name: {{ .name | default "http" }}
+      protocol: {{ .protocol | default "TCP" }}
+      port: {{ .port }}
+      {{ with .targetPort -}}targetPort: {{ . }}{{- end -}}
+      {{ with .nodePort -}}nodePort: {{ . }}{{- end -}}
+    {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "mongodb.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  sessionAffinity: None

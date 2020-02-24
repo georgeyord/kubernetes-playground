@@ -1,0 +1,37 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+global:
+  mongodb: {}
+
+application:
+  username: CHANGEME
+  password: CHANGEME
+
+container:
+  image:
+    repository: mongo-express
+    tag: latest
+  ports:
+    - containerPort: 8081
+  resources:
+    requests:
+      memory: 70Mi
+    limits:
+      memory: 200Mi
+  volumeMounts: []
+
+service:
+  type: ClusterIP
+  ports:
+    - port: 8081
+
+ingress:
+  default:
+    paths:
+      - path: /
+        port: 8081
+    certManager:
+      enabled: false
+      issuer: {}

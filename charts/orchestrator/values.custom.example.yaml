@@ -1,0 +1,89 @@
+#################
+#### Anchors ####
+#################
+
+x-mongo-express-host: &mongo-express-host mongodb.kubernetes.local
+x-mongo-express-basicauth-user: &mongo-express-basicauth-user mongodb
+x-mongo-express-basicauth-password: &mongo-express-basicauth-password CHANGEME
+
+x-affinity-db: &affinity-db
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: db
+            operator: Exists
+
+####################
+# Global variables #
+####################
+
+global:
+  default:
+    # The owner of the let's encrypt certificates
+    # email: CHANGEME@kubernetes.local
+    # To issue letsencrypt production certificates
+    # ingress:
+    #   issuer:
+    #     name: cm-cluster-issuer-letsencrypt-production
+
+####################
+# Experiment hello #
+####################
+
+experiment-hello:
+  ingress:
+    default:
+      # To use a custom domain name
+      # hosts:
+      # - hello.kubernetes.local
+      # To issue letsencrypt certificate for this domain name
+      # certManager:
+      #   enabled: true
+      # To use TLS for this domain name
+      # tls:
+      # - hosts:
+      #   - hello.kubernetes.local
+
+###########
+# MongoDB #
+###########
+
+mongodb:
+  container:
+    # To use a persistent volume
+    # volumeMounts:
+    #   - name: data
+    #     mountPath: /data/db
+  deployment:
+    <<: *affinity-db
+    # # To use a persistent volume
+    # volumeClaimTemplates:
+    #   - name: data
+    #     accessModes: [ ReadWriteOnce ]
+    #     storage: 1Gi
+
+#################
+# Mongo express #
+#################
+
+mongo-express:
+  application:
+    # To use in Basic authentication
+    username: *mongo-express-basicauth-user
+    password: *mongo-express-basicauth-password
+  deployment:
+    <<: *affinity-db
+  ingress:
+    default:
+      # To use a custom domain name
+      # hosts:
+      #   - *mongo-express-host
+      # To issue letsencrypt certificate for this domain name
+      # certManager:
+      #   enabled: true
+      # To use TLS for this domain name
+      # tls:
+      #   - hosts:
+      #       - *mongo-express-host

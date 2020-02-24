@@ -4,27 +4,35 @@ version: 1.0.0
 name: orchestrator
 description: Orchestrator chart in Helm/Kubernetes
 dependencies:
+- name: cert-manager
+  version: 0.13.1
+  repository: "@jetstack"
+  tags:
+    - cert-manager
+- name: cert-manager-customizations
+  version: 1.0.0
+  repository: file://../cert-manager-customizations
+  tags:
+    - cert-manager
 - name: hello
   version: 1.0.0
   repository: file://../hello
   alias: experiment-hello
   tags:
     - experiment
+- name: mongodb
+  version: 1.0.0
+  repository: file://../mongodb
+  tags:
+    - mongodb
+- name: mongo-express
+  version: 1.0.0
+  repository: file://../mongo-express
+  tags:
+    - mongodb
 - name: nginx-ingress
   # https://github.com/helm/charts/blob/master/stable/nginx-ingress/Chart.yaml
   version: 1.31.x
   repository: "@stable"
   tags:
     - nginx-ingress
-- name: cert-manager-customizations
-  version: 1.0.0
-  repository: file://../cert-manager-customizations
-  tags:
-    - cert-manager
-- name: cert-manager
-  version: 0.13.1
-  repository: "@jetstack"
-  tags:
-    - cert-manager
-  
-  

@@ -1,6 +1,16 @@
 tags:
   experiment: true
   nginx-ingress: true
+  mongodb: true
+
+####################
+# Global variables #
+####################
+
+global:
+  mongodb:
+    configMapName: mongodb-config
+    secretName: mongodb-secret
 
 ####################
 # Experiment hello #
@@ -8,3 +18,17 @@ tags:
 
 experiment-hello:
   fullnameOverride: experiment-hello
+
+###########
+# MongoDB #
+###########
+
+mongodb:
+  fullnameOverride: "mongodb"
+
+#################
+# Mongo express #
+#################
+
+mongo-express:
+  fullnameOverride: "mongo-express"

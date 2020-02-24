@@ -1,0 +1,81 @@
+{{- $global := .Values.global -}}
+{{- $release := .Release -}}
+{{- $namespace := include "mongo-express.namespace" . -}}
+{{- $chart := include "mongo-express.chart" . -}}
+{{- $name := include "mongo-express.name" . -}}
+{{- $fullname := include "mongo-express.fullname" . -}}
+{{- range $ingressName, $ingress := .Values.ingress }}
+{{ $permanentRedirect := .permanentRedirect }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: {{ $namespace }}
+  name: {{ $fullname }}-{{ $ingressName }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chart }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+  annotations:
+    {{- if .rewriteTarget }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .rewriteTarget }}
+    {{- end }}
+    {{- if $permanentRedirect }}
+    nginx.ingress.kubernetes.io/permanent-redirect: {{ $permanentRedirect }}
+    {{- end }}
+    {{- if .basicauth }}
+    {{- if .basicauth.enabled }}
+    {{- $auth := default $global.default.basicauth.auth .basicauth.auth }}
+    {{- $split := split ":" $auth -}}
+    {{- $authName := $split._0 -}}
+    {{- $check := required "basicauth auth is missing from both local (.basicauth.auth) AND global (global.default.basicauth.auth) variables" $auth -}}
+    {{- $check := required "basicauth name is missing from both local (.basicauth.name) AND global (global.default.basicauth.name) variables" $authName }}
+    nginx.ingress.kubernetes.io/auth-secret: {{ printf "%s-%s-%s-%s" $fullname "basicauth" $ingressName $authName | trunc 63 }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+    {{- end }}
+    {{- end }}
+    kubernetes.io/ingress.class: "nginx"
+    {{- with .certManager }}
+    {{- if .enabled }}
+    {{- if .issuer.name }}
+    cert-manager.io/{{ .issuer.type | default "issuer" }}: {{ .issuer.name | quote }}
+    {{- else }}
+    cert-manager.io/{{ $global.default.ingress.issuer.type | default "issuer" }}: {{ $global.default.ingress.issuer.name | quote }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- with .annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+{{- if .tls }}
+  tls:
+  {{- range .tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName | default (printf "%s-tls" $fullname) }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- $ingressPaths := .paths -}}
+  {{- range .hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+	{{- range $ingressPaths }}
+          - path: {{ .path }}
+            backend:
+              {{- if $permanentRedirect }}
+              serviceName: {{ $global.default.catchall.service }}
+              servicePort: {{ $global.default.catchall.port | default 80 }}
+              {{- else }}
+              serviceName: {{ .serviceName | default $fullname }}
+              servicePort: {{ .port | default "http" }}
+              {{- end }}
+	{{- end }}
+  {{- end }}
+---
+{{- end }}
