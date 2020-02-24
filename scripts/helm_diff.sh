@@ -9,22 +9,20 @@ if [[ "$1" == "-f" ]]; then HELM_NO_PREPARE=1; shift; fi
 
 "${SCRIPTS_DIR}/helm_prepare.sh"
 
-echo >&2 -e "\n########## Release diff - experiment ########## \n"
+diff() {
+  local RELEASE="$1"
+  local NAMESPACE="${2:-$RELEASE}"
 
-helm diff upgrade \
-  'experiment' . \
-  -f values.yaml \
-  -f values.experiment.yaml \
-  -f values.custom.yaml \
-  --allow-unreleased \
-  --context 3
+  echo >&2 -e "\n########## Release diff - ${RELEASE} ########## \n"
 
-echo >&2 -e "\n########## Release diff - cert-manager ########## \n"
+  helm diff upgrade \
+    "${RELEASE}" \
+    . \
+    --namespace "${NAMESPACE}" \
+    -f "values.${RELEASE}.yaml" \
+    -f values.custom.yaml \
+    --allow-unreleased
+}
 
-helm diff upgrade \
-  'cert-manager' . \
-  -f values.yaml \
-  -f values.cert-manager.yaml \
-  -f values.custom.yaml \
-  --allow-unreleased \
-  --context 3
+diff 'experiment' 'default'
+diff 'cert-manager'

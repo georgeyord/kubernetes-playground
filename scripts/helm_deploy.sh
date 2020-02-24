@@ -11,20 +11,21 @@ if [[ "$1" == "-f" ]]; then HELM_NO_PREPARE=1; shift; fi
 
 "${SCRIPTS_DIR}/helm_lint.sh" -f
 
-echo >&2 -e "\n########## Release deploy - experiment ########## \n"
+deploy() {
+  local RELEASE="$1"
+  local NAMESPACE="${2:-$RELEASE}"
 
-helm upgrade \
-  'experiment' . \
-  --install \
-  --namespace default \
-  -f values.experiment.yaml \
-  -f values.custom.yaml
+  echo >&2 -e "\n########## Release deploy - ${RELEASE} ########## \n"
 
-echo >&2 -e "\n########## Release deploy - cert-manager ########## \n"
+  helm upgrade \
+    "${RELEASE}" \
+    . \
+    --install \
+    --cleanup-on-fail \
+    --namespace "${NAMESPACE}" \
+    -f "values.${RELEASE}.yaml" \
+    -f values.custom.yaml
+}
 
-helm upgrade \
-  'cert-manager' . \
-  --install \
-  --namespace cert-manager \
-  -f values.cert-manager.yaml \
-  -f values.custom.yaml
+deploy 'experiment' 'default'
+deploy 'cert-manager'
