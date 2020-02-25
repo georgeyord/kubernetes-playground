@@ -19,7 +19,7 @@ container:
   #   - name: data
   #     mountPath: /data/db
 
-deployment:
+deployment: {}
   # To use a persistent volume
   # volumeClaimTemplates:
   #   - name: data

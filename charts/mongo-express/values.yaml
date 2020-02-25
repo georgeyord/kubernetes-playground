@@ -22,6 +22,8 @@ container:
       memory: 200Mi
   volumeMounts: []
 
+deployment: {}
+
 service:
   type: ClusterIP
   ports:
