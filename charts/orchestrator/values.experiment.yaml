@@ -1,7 +1,10 @@
 tags:
   experiment: true
-  nginx-ingress: true
+  links: true
   mongodb: true
+  nginx-ingress: true
+  prometheus-operator: true
+  prometheus-addons: true
 
 ####################
 # Global variables #
@@ -32,3 +35,49 @@ mongodb:
 
 mongo-express:
   fullnameOverride: "mongo-express"
+
+#######################
+# Prometheus operator #
+#######################
+
+prometheus-operator:
+  fullnameOverride: prom-operator
+  kube-state-metrics:
+    fullnameOverride: kube-state-metrics
+  prometheus-node-exporter:
+    fullnameOverride: prometheus-node-exporter
+  # global:
+  #   rbac:
+  #     pspEnabled: false
+  prometheusOperator:
+    # logLevel: debug
+    # Prometheus operator admissionWebhooks are taking too long and we dont currently use their features. I disable them until they become useful to us.
+    # Read more: https://github.com/helm/charts/tree/master/stable/prometheus-operator#prometheus-operator-1
+    admissionWebhooks:
+      enabled: false
+      patch:
+        enabled: false
+    tlsProxy:
+      enabled: false
+  prometheus:
+    prometheusSpec:
+#      serviceMonitorNamespaceSelector:
+#        any: true
+      # Time duration Prometheus shall retain data for. Must match the regular expression [0-9]+(ms|s|m|h|d|w|y) (milliseconds seconds minutes hours days weeks years).
+      retention: 10d
+      # logLevel: debug
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+  grafana:
+    fullnameOverride: grafana
+    env:
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s/"
+      # GF_AUTH_ANONYMOUS_ENABLED: "true"
+  coreDns:
+    enabled: false
+  kubeDns:
+    enabled: true
+  # TODO: https://github.com/helm/charts/commit/1c0d7ce99d09471882b69f8863730773d02ee39a#diff-ae0db05747f536183816893bcaf18efbR534
+  kubeProxy:
+    enabled: false

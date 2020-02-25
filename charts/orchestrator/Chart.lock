@@ -8,6 +8,9 @@ dependencies:
 - name: hello
   repository: file://../hello
   version: 1.0.0
+- name: links
+  repository: file://../links
+  version: 1.0.0
 - name: mongodb
   repository: file://../mongodb
   version: 1.0.0
@@ -17,5 +20,14 @@ dependencies:
 - name: nginx-ingress
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.31.0
-digest: sha256:f1525c2c8c7f504088ef433f71315da7b6abe16059602b0c569bb518bb116153
-generated: "2020-02-24T16:29:47.281051+02:00"
+- name: prometheus-operator
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 8.9.2
+- name: prometheus-blackbox-exporter
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 3.2.0
+- name: prometheus-pushgateway
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 1.2.14
+digest: sha256:1143d19e40bfc8c93fb274a3b008a993cf6aa01303aab481d4165798d4d98df1
+generated: "2020-02-25T10:00:28.808255+02:00"

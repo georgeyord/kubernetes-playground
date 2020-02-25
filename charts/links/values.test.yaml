@@ -1,0 +1,12 @@
+# USED in `helm_template.sh` script
+
+#########################
+#### Global defaults ####
+#########################
+
+global:
+  default:
+    catchall:
+      service: foo
+    basicauth:
+      auth: foo:SHA1

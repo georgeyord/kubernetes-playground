@@ -1,8 +1,11 @@
 tags:
-  experiment: false
-  nginx-ingress: false
   cert-manager: false
+  experiment: false
+  links: false
   mongodb: false
+  nginx-ingress: false
+  prometheus-operator: false
+  prometheus-addons: false
 
 ####################
 # Global variables #

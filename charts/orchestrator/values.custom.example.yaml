@@ -2,6 +2,10 @@
 #### Anchors ####
 #################
 
+x-grafana-host: &grafana-host grafana.kubernetes.local
+x-grafana-admin-password: &grafana-admin-password x-mongo-express-basicauth-password: &mongo-express-basicauth-password CHANGEME
+
+
 x-mongo-express-host: &mongo-express-host mongodb.kubernetes.local
 x-mongo-express-basicauth-user: &mongo-express-basicauth-user mongodb
 x-mongo-express-basicauth-password: &mongo-express-basicauth-password CHANGEME
@@ -14,6 +18,14 @@ x-affinity-db: &affinity-db
         - matchExpressions:
           - key: db
             operator: Exists
+x-affinity-logging: &affinity-logging
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: logging
+            operator: Exists
 
 ####################
 # Global variables #
@@ -21,6 +33,10 @@ x-affinity-db: &affinity-db
 
 global:
   default:
+    # Default BasicAuth username:password pair to use in ingresses
+    # Online generator: https://rudrastyh.com/tools/htpasswd-generator
+    # basicauth:
+    #   auth: foo:[SHA1]
     # The owner of the let's encrypt certificates
     # email: CHANGEME@kubernetes.local
     # To issue letsencrypt production certificates
@@ -57,6 +73,7 @@ mongodb:
     #   - name: data
     #     mountPath: /data/db
   deployment:
+    # To set a specific affinity
     <<: *affinity-db
     # # To use a persistent volume
     # volumeClaimTemplates:
@@ -87,3 +104,35 @@ mongo-express:
       # tls:
       #   - hosts:
       #       - *mongo-express-host
+
+#######################
+# Prometheus operator #
+#######################
+
+prometheus-operator:
+  prometheusOperator:
+    # To set a specific affinity
+    # <<: *affinity-logging
+  prometheus:
+    prometheusSpec:
+      # To set a specific affinity
+      # <<: *affinity-logging
+      # To use a persistent volume
+      # storageSpec:
+      #   volumeClaimTemplate:
+      #     spec:
+      #       accessModes: ["ReadWriteOnce"]
+      #       resources:
+      #         requests:
+      #           storage: 5Gi
+  alertmanager:
+    alertmanagerSpec:
+      # To set a specific affinity
+      <<: *affinity-logging
+  grafana:
+    # To set a specific affinity
+    <<: *affinity-logging
+    adminPassword: *grafana-admin-password
+    env:
+      GF_SERVER_DOMAIN: *grafana-host
+

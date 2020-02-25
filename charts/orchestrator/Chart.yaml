@@ -20,6 +20,11 @@ dependencies:
   alias: experiment-hello
   tags:
     - experiment
+- name: links
+  version: 1.0.0
+  repository: file://../links
+  tags:
+    - links
 - name: mongodb
   version: 1.0.0
   repository: file://../mongodb
@@ -36,3 +41,21 @@ dependencies:
   repository: "@stable"
   tags:
     - nginx-ingress
+- name: prometheus-operator
+  # https://github.com/helm/charts/blob/master/stable/prometheus-operator/Chart.yaml
+  version: 8.x.x
+  repository: "@stable"
+  tags:
+    - prometheus-operator
+- name: prometheus-blackbox-exporter
+  # https://github.com/helm/charts/blob/master/stable/prometheus-blackbox-exporter/Chart.yaml
+  version: 3.x.x
+  repository: "@stable"
+  tags:
+    - prometheus-addons
+- name: prometheus-pushgateway
+  # https://github.com/helm/charts/blob/master/stable/prometheus-pushgateway/Chart.yaml
+  version: 1.x.x
+  repository: "@stable"
+  tags:
+    - prometheus-addons
