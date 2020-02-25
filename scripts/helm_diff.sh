@@ -13,7 +13,7 @@ diff() {
   local RELEASE="$1"
   local NAMESPACE="${2:-$RELEASE}"
 
-  echo >&2 -e "\n########## Release diff - ${RELEASE} ########## \n"
+  echo >&2 -e "\n########## Diff - Release: ${RELEASE} ########## \n"
 
   helm diff upgrade \
     "${RELEASE}" \

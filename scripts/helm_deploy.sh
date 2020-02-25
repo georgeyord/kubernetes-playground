@@ -15,7 +15,7 @@ deploy() {
   local RELEASE="$1"
   local NAMESPACE="${2:-$RELEASE}"
 
-  echo >&2 -e "\n########## Release deploy - ${RELEASE} ########## \n"
+  echo >&2 -e "\n########## Deploy - Release: ${RELEASE} ########## \n"
 
   helm upgrade \
     "${RELEASE}" \

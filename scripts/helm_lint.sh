@@ -11,7 +11,7 @@ if [[ "$1" == "-f" ]]; then HELM_NO_PREPARE=1; shift; fi
 
 lint() {
   local RELEASE="$1"
-  echo >&2 -e "\n########## Release lint - ${RELEASE} ########## \n"
+  echo >&2 -e "\n########## Lint - Release: ${RELEASE} ########## \n"
 
   helm lint . \
     -f "values.${RELEASE}.yaml" \
