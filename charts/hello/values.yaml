@@ -11,6 +11,10 @@ container:
     tag: latest
   ports:
     - containerPort: 80
+  # Uncomment to inject custom env vars if needed
+  # env:
+  #   SUPER_COOL_VAR: "foo"
+  #   SUPER_DUPER_COOL_VAR: "bar"
   resources:
     requests:
       memory: 20Mi
