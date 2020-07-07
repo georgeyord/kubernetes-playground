@@ -12,6 +12,8 @@ if [[ "$1" == "-f" ]]; then HELM_NO_PREPARE=1; shift; fi
 diff() {
   local RELEASE="$1"
   local NAMESPACE="${2:-$RELEASE}"
+  shift
+  shift
 
   echo >&2 -e "\n########## Diff - Release: ${RELEASE} ########## \n"
 
@@ -24,5 +26,5 @@ diff() {
     --allow-unreleased
 }
 
-diff 'experiment' 'default'
-diff 'cert-manager'
+diff 'experiment' 'default' $*
+diff 'cert-manager' $*
