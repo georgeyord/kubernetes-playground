@@ -3,8 +3,7 @@
 #################
 
 x-grafana-host: &grafana-host grafana.kubernetes.local
-x-grafana-admin-password: &grafana-admin-password x-mongo-express-basicauth-password: &mongo-express-basicauth-password CHANGEME
-
+x-grafana-admin-password: &grafana-admin-password CHANGEME
 
 x-mongo-express-host: &mongo-express-host mongodb.kubernetes.local
 x-mongo-express-basicauth-user: &mongo-express-basicauth-user mongodb
@@ -135,4 +134,3 @@ prometheus-operator:
     adminPassword: *grafana-admin-password
     env:
       GF_SERVER_DOMAIN: *grafana-host
-
