@@ -1,0 +1,76 @@
+{{- $release := .Release -}}
+{{- $namespace := include "<CHARTNAME>.namespace" . -}}
+{{- $chart := include "<CHARTNAME>.chart" . -}}
+{{- $name := include "<CHARTNAME>.name" . -}}
+{{- $fullname := include "<CHARTNAME>.fullname" . -}}
+
+{{- range $jobName, $job := .Values.jobs }}
+{{- if $job.schedule }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: {{ $namespace }}
+  name: {{ printf "%s-%s" $fullname $jobName | trunc 52 | trimSuffix "-" }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chart }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            cron: {{ $jobName }}
+            app.kubernetes.io/name: {{ $name }}
+            helm.sh/chart: {{ $chart }}
+            app.kubernetes.io/instance: {{ $release.Name }}
+            app.kubernetes.io/managed-by: {{ $release.Service }}
+        {{- with $job }}
+        spec:
+          containers:
+          - image: "{{ .image.repository }}:{{ .image.tag }}"
+            imagePullPolicy: {{ .image.imagePullPolicy | default "IfNotPresent" }}
+            name: {{ $jobName }}
+            {{- with .env }}
+            env: {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .command }}
+            command: {{ . }}
+            {{- end }}
+            {{- with .args }}
+            args: {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .resources }}
+            resources: {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with .volumeMounts }}
+            volumeMounts: {{- toYaml . | nindent 14 }}
+            {{- end }}
+          {{- with .imagePullSecrets }}
+          imagePullSecrets: {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .affinity }}
+          affinity: {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .tolerations }}
+          tolerations: {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .restartPolicy }}
+          restartPolicy: {{ . }}
+          {{- end }}
+          {{- with .volumes }}
+          volumes: {{- toYaml . | nindent 8 }}
+          {{- end }}
+        {{- end }}
+      {{ with $job.backoffLimit }}backoffLimit: {{ . }}{{- end }}
+      {{ with $job.activeDeadlineSeconds }}activeDeadlineSeconds: {{ . }}{{- end }}
+      {{ with $job.ttlSecondsAfterFinished }}ttlSecondsAfterFinished: {{ . }}{{- end }}
+  schedule: {{ $job.schedule | quote }}
+  concurrencyPolicy: {{ $job.concurrencyPolicy | default "Forbid" }}
+  {{ with $job.successfulJobsHistoryLimit }}successfulJobsHistoryLimit: {{ . }}{{- end }}
+  {{ with $job.failedJobsHistoryLimit }}failedJobsHistoryLimit: {{ . }}{{- end }}
+{{- end }}
+{{- end }}

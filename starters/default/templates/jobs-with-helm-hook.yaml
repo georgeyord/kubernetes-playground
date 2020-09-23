@@ -1,0 +1,70 @@
+{{- $release := .Release -}}
+{{- $namespace := include "<CHARTNAME>.namespace" . -}}
+{{- $chart := include "<CHARTNAME>.chart" . -}}
+{{- $name := include "<CHARTNAME>.name" . -}}
+{{- $fullname := include "<CHARTNAME>.fullname" . -}}
+
+{{- range $jobName, $job := .Values.jobs }}
+{{- if $job.helmHookAnnotations }}
+{{- if not $job.disabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: {{ $namespace }}
+  name: {{ printf "%s-%s" $fullname $jobName | trunc 47 | trimSuffix "-" }}-hook
+  labels:
+    cron: {{ $jobName }}
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chart }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+  annotations:
+    {{- with $job.helmHookAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  template:
+    {{- with $job }}
+    spec:
+      containers:
+      - image: "{{ .image.repository }}:{{ .image.tag }}"
+        imagePullPolicy: {{ .image.imagePullPolicy | default "IfNotPresent" }}
+        name: {{ $jobName }}
+        {{- with .env }}
+        env: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .command }}
+        command: {{ . }}
+        {{- end }}
+        {{- with .args }}
+        args: {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .resources }}
+        resources: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .volumeMounts }}
+        volumeMounts: {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .restartPolicy }}
+      restartPolicy: {{ . }}
+      {{- end }}
+      {{- with .volumes }}
+      volumes: {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- end }}
+  {{ with $job.backoffLimit }}backoffLimit: {{ . }}{{- end }}
+  {{ with $job.activeDeadlineSeconds }}activeDeadlineSeconds: {{ . }}{{- end }}
+  {{ with $job.ttlSecondsAfterFinished }}ttlSecondsAfterFinished: {{ . }}{{- end }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

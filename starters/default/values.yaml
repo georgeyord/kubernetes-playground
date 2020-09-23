@@ -1,0 +1,106 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
+container:
+  image:
+    repository: <CHARTNAME>
+    tag: latest
+  ports:
+    - containerPort: 80
+  # Use this to add env variables
+  # env:
+    # - name: FOO
+    #   value: bar
+  # Use this to add liveness probe
+  # livenessProbe:
+    # httpGet:
+    #   path: /
+    #   port: http
+    # periodSeconds: 30
+  # Use this to add readiness probe
+  # readinessProbe:
+    # httpGet:
+    #   path: /
+    #   port: http
+    # periodSeconds: 30
+  # resources: {}
+  # Use this to add volume mounts; remember to create the associated claim in deployment
+  # volumeMounts:
+    # - name: data
+    #   mountPath: /data/db
+
+# deployment:
+  # REMEMBER: Use quotes for zero replicas
+  # replicaCount: 1
+  # revisionHistoryLimit: 0
+  # affinity: {}
+  # tolerations: []
+  # nodeSelector: {}
+  # strategy: {}
+  # Use this to add volumes; remember to use it in the associated container(s)
+  # volumes:
+    # - name: foo-volume
+    #   configMap:
+    #     name: foo-config
+  # Use this to add volume claims; remember to use it in the associated container(s)
+  # volumeClaimTemplates:
+    # - name: data
+    #   accessModes: [ ReadWriteOnce ]
+    #   storage: 1Gi
+
+service:
+  ports:
+    - port: 80
+
+ingress:
+  default:
+    hosts:
+      - chart-example.local
+    paths:
+      - path: /
+        port: 80
+    annotations: {}
+    # Use this to redirect the user to a different location
+    # permanentRedirect: http://example.com
+    # Use this to add a rewrite target
+    # rewriteTarget: /foo
+    # Use this to enable HTTPS
+    # certManager:
+      # enabled: true
+      # acmeChallenge: true
+      # issuer: {}
+    # Use this to enable TLS
+    # tls:
+      # - hosts:
+      #     - chart-example.local
+    # Use this to enable BasicAuth (auth value should not be base64 encoded)
+    # basicauth:
+      # enabled: true
+      # auth: foo:bar
+
+# Use this to connect to private docker registries
+# imagePullSecrets:
+#   - name: foo
+#     registry: foo.example.com
+#     username: bar
+#     password: foobar
+
+# Use this to create cron jobs
+# jobs:
+#   sample-date:
+#     image:
+#       repository: busybox
+#       tag: latest
+#     restartPolicy: Never
+#     # Enable to make it a cronjob
+#     schedule: "0 * * * *"
+#     # Enable to make it a Helm hook
+#     helmHookAnnotations:
+#       helm.sh/hook: post-install,post-upgrade
+#       helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+#     # Print out the current path
+#     args: ["pwd"]

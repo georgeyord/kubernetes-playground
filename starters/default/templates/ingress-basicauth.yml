@@ -1,0 +1,31 @@
+{{- $global := .Values.global -}}
+{{- $release := .Release -}}
+{{- $namespace := include "<CHARTNAME>.namespace" . -}}
+{{- $chart := include "<CHARTNAME>.chart" . -}}
+{{- $name := include "<CHARTNAME>.name" . -}}
+{{- $fullname := include "<CHARTNAME>.fullname" . -}}
+{{- range $ingressName, $ingress := .Values.ingress }}
+{{- if .basicauth }}
+{{- if .basicauth.enabled }}
+{{- $auth := default $global.default.basicauth.auth .basicauth.auth }}
+{{- $split := split ":" $auth }}
+{{- $authName := $split._0 }}
+{{- $check := required "basicauth auth is missing from both local (.basicauth.auth) AND global (global.default.basicauth.auth) variables" $auth }}
+{{- $check := required "basicauth name is missing from both local (.basicauth.name) AND global (global.default.basicauth.name) variables" $authName }}
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  namespace: {{ $namespace }}
+  name: {{ printf "%s-%s-%s-%s" $fullname "basicauth" $ingressName $authName | trunc 63 }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chart }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+data:
+  auth: {{ $auth | b64enc }}
+---
+{{- end }}
+{{- end }}
+{{- end }}
