@@ -1,0 +1,12 @@
+- name: lenses-cli-sidecar
+  image: eu.gcr.io/lenses-ci/lenses-cli:release-4.0
+  command:
+    - bash
+    - -c
+    - |
+      # Be extra strict
+      set -o errexit;
+      set -o nounset;
+      set -o xtrace;
+
+      db-connect --user={{ .Values.security.defaultUser.username }} --pass={{ .Values.security.defaultUser.password }}

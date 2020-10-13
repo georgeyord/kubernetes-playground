@@ -1,0 +1,13 @@
+{{- $files := .Files.Glob "files/templated/*.yaml" }}
+{{- if $files }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test
+data:
+{{- range $path, $fileContents := $files }}
+{{- $dashboardName := regexReplaceAll "(^.*/)(.*)\\.yaml$" $path "${2}" }}
+  {{ $dashboardName }}.yaml: |
+    {{- (tpl ($.Files.Get $path) $) | nindent 4 }}
+{{- end }}
+{{- end }}
