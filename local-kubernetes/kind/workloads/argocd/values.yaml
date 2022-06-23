@@ -1,0 +1,12 @@
+
+server:
+  insecure: true
+  # config: |
+
+  ingress:
+    enabled: true
+    hostname: argocd.lan
+    # ingressClassName:
+
+  metrics:
+    enabled: true
