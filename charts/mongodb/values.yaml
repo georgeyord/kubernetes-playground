@@ -5,7 +5,7 @@ namespaceOverride: ""
 container:
   image:
     repository: mongo
-    tag: 4.0
+    tag: 6.0
   ports:
     - name: mongo
       containerPort: 27017
