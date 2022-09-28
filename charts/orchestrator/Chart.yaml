@@ -37,7 +37,7 @@ dependencies:
     - mongodb
 - name: nginx-ingress
   # https://github.com/helm/charts/blob/master/stable/nginx-ingress/Chart.yaml
-  version: 1.31.x
+  version: 1.41.x
   repository: "@stable"
   tags:
     - nginx-ingress
