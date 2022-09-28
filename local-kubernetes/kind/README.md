@@ -1,6 +1,6 @@
 # Run Kubernetes locally using kind
 
-> Read more: https://kind.sigs.k8s.io/docs/user/ingress/#ingress-nginx
+> Read more: https://kind.sigs.k8s.io/
 
 ## Installation
 

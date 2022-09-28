@@ -18,16 +18,16 @@ dependencies:
   repository: file://../mongo-express
   version: 1.0.0
 - name: nginx-ingress
-  repository: https://kubernetes-charts.storage.googleapis.com
+  repository: https://charts.helm.sh/stable
   version: 1.31.0
 - name: prometheus-operator
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 8.9.2
+  repository: https://charts.helm.sh/stable
+  version: 8.16.1
 - name: prometheus-blackbox-exporter
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 3.2.0
+  repository: https://charts.helm.sh/stable
+  version: 3.5.0
 - name: prometheus-pushgateway
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 1.2.14
-digest: sha256:1143d19e40bfc8c93fb274a3b008a993cf6aa01303aab481d4165798d4d98df1
-generated: "2020-02-25T10:00:28.808255+02:00"
+  repository: https://charts.helm.sh/stable
+  version: 1.4.3
+digest: sha256:37d4bc70db20dd532949f1ddffd8a52614e4053e17787ca6a151a8e6110cd691
+generated: "2022-09-28T16:44:27.314481+03:00"
