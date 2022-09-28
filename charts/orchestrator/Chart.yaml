@@ -49,7 +49,7 @@ dependencies:
     - prometheus-operator
 - name: prometheus-blackbox-exporter
   # https://github.com/helm/charts/blob/master/stable/prometheus-blackbox-exporter/Chart.yaml
-  version: 3.x.x
+  version: 4.x
   repository: "@stable"
   tags:
     - prometheus-addons
