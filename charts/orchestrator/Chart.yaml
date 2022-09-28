@@ -43,7 +43,7 @@ dependencies:
     - nginx-ingress
 - name: prometheus-operator
   # https://github.com/helm/charts/blob/master/stable/prometheus-operator/Chart.yaml
-  version: 8.x.x
+  version: 9.x
   repository: "@stable"
   tags:
     - prometheus-operator
